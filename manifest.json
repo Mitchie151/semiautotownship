@@ -1,0 +1,5 @@
+{
+    "namespace": "semiAutoTownship",
+    "icon": "icon.png",
+    "setup": "main.mjs"
+}
