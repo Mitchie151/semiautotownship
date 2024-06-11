@@ -23,6 +23,13 @@ export function setup(ctx) {
             hint: "Limit minimum amount of money that mod will leave in your bank",
             default: 0,
             min: 0
+        },
+        {
+            type: 'switch',
+            name: 'repair-in-winter',
+            label: 'Repair in Winter?',
+            hint: 'Determines if township should continue repairing during winter season.',
+            default: true
         }]
     );
 
@@ -32,7 +39,8 @@ export function setup(ctx) {
         let repairCost = game.township.getTotalRepairCosts().get(game.township.resources.getObjectByID("melvorF:GP"))
 
         // If the repair will leave you with above the set minimum GP, repair all
-        if (game.gp.amount - repairCost > generalSettings.get("Minimum Money")) {
+        if ((game.gp.amount - repairCost > generalSettings.get("Minimum Money")) &&
+            (game.township.townData.season.id != "melvorF:Winter" || generalSettings.get("repair-in-winter"))) {
             this.repairAllBuildings();
         }
 
