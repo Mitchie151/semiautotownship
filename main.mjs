@@ -30,8 +30,13 @@ export function setup(ctx) {
             label: 'Repair in Winter?',
             hint: 'Determines if township should continue repairing during winter season.',
             default: true
-        },
-        {
+        }]
+    );
+
+    const intoTheAbyssSettings = ctx.settings.section('Into the Abyss');
+
+    intoTheAbyssSettings.add(
+        [{
             type: 'switch',
             name: 'wave-if-suboptimal',
             label: 'Fight current wave if suboptimal?',
@@ -61,7 +66,7 @@ export function setup(ctx) {
 
         // Auto Abyssal Wave Fighting
         if (game.township.townData.health >= 100 && game.township.canFightAbyssalWaves && game.township.canWinAbyssalWave) {
-            if (generalSettings.get("wave-if-suboptimal") || fortificationsUpgraded()) {
+            if (intoTheAbyssSettings.get("wave-if-suboptimal") || fortificationsUpgraded()) {
                 game.township.processAbyssalWaveOnClick();
             }
         }
