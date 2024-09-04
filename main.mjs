@@ -30,11 +30,17 @@ export function setup(ctx) {
             label: 'Repair in Winter?',
             hint: 'Determines if township should continue repairing during winter season.',
             default: true
+        },
+        {
+            type: 'switch',
+            name: 'wave-if-suboptimal',
+            label: 'Fight current wave if suboptimal?',
+            hint: 'Determines if township should fight waves if fortification upgrades are available (Reccomended OFF).',
+            default: false
         }]
     );
 
     ctx.patch(Township, 'tick').after(function () {
-
         // Get the GP cost to repair all
         let repairCost = game.township.getTotalRepairCosts().get(game.township.resources.getObjectByID("melvorF:GP"))
 
@@ -52,11 +58,17 @@ export function setup(ctx) {
 
         // Apply healing
         this.increaseHealth(resourceToUse, healthToHeal);
+
+        // Auto Abyssal Wave Fighting
+        if (game.township.townData.health >= 100 && game.township.canFightAbyssalWaves && game.township.canWinAbyssalWave) {
+            if (generalSettings.get("wave-if-suboptimal") || fortificationsUpgraded()) {
+                game.township.processAbyssalWaveOnClick();
+            }
+        }
     });
 }
 
 function getResourceToUse(generalSettings) {
-
     let resourceName = generalSettings.get("Resources");
     let herbGeneration = game.township.resources.getObjectByID("melvorF:Herbs").generation;
     let potionGeneration = game.township.resources.getObjectByID("melvorF:Potions").generation;
@@ -71,6 +83,30 @@ function getResourceToUse(generalSettings) {
     } else {
         return resourceName;
     }
+}
 
+// Hardcoded, probably doesn't matter though doubt these will change.
+const FORTIFICATION_REQUIREMENTS = [
+    { level: 10, requirement: 7.5 },
+    { level: 20, requirement: 7.5 },
+    { level: 30, requirement: 27.5 },
+    { level: 40, requirement: 70 },
+    { level: 50, requirement: 130 },
+];
 
+function fortificationsUpgraded() {
+    const fortification = game.township.townData.fortification;
+    const level = game.township.abyssalLevel;
+
+    for (const { level: maxLevel, requirement } of FORTIFICATION_REQUIREMENTS) {
+        if (level < maxLevel && fortification >= requirement) {
+            return true;
+        }
+    }
+
+    if (level >= 50 && fortification >= FORTIFICATION_REQUIREMENTS[4].requirement) {
+        return true;
+    }
+
+    return false;
 }
