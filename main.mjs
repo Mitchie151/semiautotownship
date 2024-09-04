@@ -40,8 +40,15 @@ export function setup(ctx) {
             type: 'switch',
             name: 'wave-if-suboptimal',
             label: 'Fight current wave if suboptimal?',
-            hint: 'Determines if township should fight waves if fortification upgrades are available (Reccomended OFF).',
+            hint: 'Determines if township should fight waves if fortification upgrades are available (Recommended OFF).',
             default: false
+        },
+        {
+            type: 'number',
+            name: 'minimum-armour-and-weaponary',
+            label: 'Minimum Armour & Weaponary',
+            hint: 'Minimum amount of armour & weaponary left in bank for trading.',
+            default: 0,
         }]
     );
 
@@ -65,10 +72,18 @@ export function setup(ctx) {
         this.increaseHealth(resourceToUse, healthToHeal);
 
         // Auto Abyssal Wave Fighting
-        if (game.township.townData.health >= 100 && game.township.canFightAbyssalWaves && game.township.canWinAbyssalWave) {
-            if (intoTheAbyssSettings.get("wave-if-suboptimal") || fortificationsUpgraded()) {
-                game.township.processAbyssalWaveOnClick();
-            }
+        const armourAndWeaponary = game.township.resources.getObjectByID("melvorItA:ArmourWeaponry").amount;
+        const minimumArmourAndWeaponary = intoTheAbyssSettings.get("minimum-armour-and-weaponary");
+        const abyssalWaveSize = game.township.abyssalWaveSize;
+        const minimumArmourAndWeaponaryMet = (armourAndWeaponary - abyssalWaveSize) >= minimumArmourAndWeaponary;
+
+        const healthSufficient = game.township.townData.health >= 100;
+        const conditionsMet = healthSufficient && game.township.canFightAbyssalWaves && game.township.canWinAbyssalWave && minimumArmourAndWeaponaryMet;
+
+        if (!conditionsMet) return;
+
+        if (intoTheAbyssSettings.get("wave-if-suboptimal") || fortificationsUpgraded()) {
+            game.township.processAbyssalWaveOnClick();
         }
     });
 }
