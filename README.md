@@ -1,6 +1,6 @@
 # Semi Auto Township
 
-This mod automatically heals and repairs your township town, as well as automatically fighting abyssal waves when optimal.
+This mod automatically heals and repairs your township town, as well as fighting abyssal waves when optimal.
 
 Once your township is profitable (with town halls), this allows you to fully idle township, without ever having to revisit your town to repair, heal, or handle abyssal waves.
 
@@ -9,7 +9,7 @@ In the mod settings, you can set a cap that will prevent it from spending your w
 
 For healing, you can select what resource to use, either herbs or potions. By default, this mod will select the one for which you have the highest income.
 
-You can also enable an option to engage abyssal waves even if fortifications are not fully upgraded, although this will reduce XP efficiency and is reccomended to be left off.
+You can also enable an option to engage abyssal waves even if fortifications are not fully upgraded, although this will reduce XP efficiency and is recommended to be left off.
 
 ## Help
 Repairing can be expensive at times, so it may be inadvisable to turn this on until your town is profitable.
