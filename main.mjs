@@ -59,7 +59,12 @@ export function setup(ctx) {
         // If the repair will leave you with above the set minimum GP, repair all
         if ((game.gp.amount - repairCost > generalSettings.get("Minimum Money")) &&
             (game.township.townData.season.id != "melvorF:Winter" || generalSettings.get("repair-in-winter"))) {
-            this.repairAllBuildings();
+                // Leaving here to avoid breaking if another storage type is added
+                game.township.repairAllBuildings();
+                // For some reason game.township.repairAllBuildings() doesn't repair both individually
+                // So two seperate calls stop ItA repair costs preventing normal repair and vice versa
+                game.township.repairAllBuildingsFromStorageType('Normal');
+                game.township.repairAllBuildingsFromStorageType('Soul');
         }
 
         let resourceName = getResourceToUse(generalSettings);
@@ -99,7 +104,6 @@ function getResourceToUse(generalSettings) {
         } else {
             return "melvorF:Potions";
         }
-
     } else {
         return resourceName;
     }
