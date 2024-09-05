@@ -8,7 +8,7 @@ export function setup(ctx) {
             type: "dropdown",
             name: "Resources",
             label: "Resources",
-            hint: "Which resource to heal your town with",
+            hint: "Which resource to heal your town with.",
             default: "Auto",
             options: [
                 { value: "Auto", display: "Auto" },
@@ -20,7 +20,7 @@ export function setup(ctx) {
             type: "number",
             name: "Minimum Money",
             label: "Minimum Money",
-            hint: "Limit minimum amount of money that mod will leave in your bank",
+            hint: "Limit minimum amount of money that mod will leave in your bank.",
             default: 0,
             min: 0
         },
@@ -73,7 +73,7 @@ export function setup(ctx) {
         let resourceToUse = game.township.resources.getObjectByID(resourceName);
 
         // Calculate amount of healing required
-        let healthToHeal = 100 - game.township.townData.health
+        let healthToHeal = 100 - game.township.townData.health;
 
         // Apply healing
         this.increaseHealth(resourceToUse, healthToHeal);
