@@ -49,6 +49,7 @@ export function setup(ctx) {
             label: 'Minimum Armour & Weaponary',
             hint: 'Minimum amount of armour & weaponary left in bank for trading.',
             default: 0,
+            min: 0
         }]
     );
 
