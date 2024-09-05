@@ -39,7 +39,7 @@ export function setup(ctx) {
         [{
             type: 'switch',
             name: 'wave-if-suboptimal',
-            label: 'Fight current wave if suboptimal?',
+            label: 'Fight Current Wave if Suboptimal?',
             hint: 'Determines if township should fight waves if fortification upgrades are available (Recommended OFF).',
             default: false
         },
