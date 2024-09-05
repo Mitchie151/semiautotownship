@@ -64,7 +64,9 @@ export function setup(ctx) {
                 // For some reason game.township.repairAllBuildings() doesn't repair both individually
                 // So two seperate calls stop ItA repair costs preventing normal repair and vice versa
                 game.township.repairAllBuildingsFromStorageType('Normal');
-                game.township.repairAllBuildingsFromStorageType('Soul');
+                if (game.township.canFightAbyssalWaves) {
+                    game.township.repairAllBuildingsFromStorageType('Soul');
+                }
         }
 
         let resourceName = getResourceToUse(generalSettings);
@@ -77,18 +79,20 @@ export function setup(ctx) {
         this.increaseHealth(resourceToUse, healthToHeal);
 
         // Auto Abyssal Wave Fighting
-        const armourAndWeaponary = game.township.resources.getObjectByID("melvorItA:ArmourWeaponry").amount;
-        const minimumArmourAndWeaponary = intoTheAbyssSettings.get("minimum-armour-and-weaponary");
-        const abyssalWaveSize = game.township.abyssalWaveSize;
-        const minimumArmourAndWeaponaryMet = (armourAndWeaponary - abyssalWaveSize) >= minimumArmourAndWeaponary;
+        if (game.township.canFightAbyssalWaves) {
+            const armourAndWeaponary = game.township.resources.getObjectByID("melvorItA:ArmourWeaponry").amount;
+            const minimumArmourAndWeaponary = intoTheAbyssSettings.get("minimum-armour-and-weaponary");
+            const abyssalWaveSize = game.township.abyssalWaveSize;
+            const minimumArmourAndWeaponaryMet = (armourAndWeaponary - abyssalWaveSize) >= minimumArmourAndWeaponary;
 
-        const healthSufficient = game.township.townData.health >= 100;
-        const conditionsMet = healthSufficient && game.township.canFightAbyssalWaves && game.township.canWinAbyssalWave && minimumArmourAndWeaponaryMet;
+            const healthSufficient = game.township.townData.health >= 100;
+            const conditionsMet = healthSufficient && game.township.canWinAbyssalWave && minimumArmourAndWeaponaryMet;
 
-        if (!conditionsMet) return;
+            if (!conditionsMet) return;
 
-        if (intoTheAbyssSettings.get("wave-if-suboptimal") || fortificationsUpgraded()) {
-            game.township.processAbyssalWaveOnClick();
+            if (intoTheAbyssSettings.get("wave-if-suboptimal") || fortificationsUpgraded()) {
+                game.township.processAbyssalWaveOnClick();
+            }
         }
     });
 }
