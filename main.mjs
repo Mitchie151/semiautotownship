@@ -45,9 +45,9 @@ export function setup(ctx) {
         },
         {
             type: 'number',
-            name: 'minimum-armour-and-weaponary',
-            label: 'Minimum Armour & Weaponary',
-            hint: 'Minimum amount of armour & weaponary left in bank for trading.',
+            name: 'minimum-armour-and-weaponry',
+            label: 'Minimum Armour & Weaponry',
+            hint: 'Minimum amount of armour & weaponry left in bank for trading.',
             default: 0,
             min: 0
         }]
@@ -82,7 +82,7 @@ export function setup(ctx) {
         // Auto Abyssal Wave Fighting
         if (game.township.canFightAbyssalWaves) {
             const armourAndWeaponary = game.township.resources.getObjectByID("melvorItA:ArmourWeaponry").amount;
-            const minimumArmourAndWeaponary = intoTheAbyssSettings.get("minimum-armour-and-weaponary");
+            const minimumArmourAndWeaponary = intoTheAbyssSettings.get("minimum-armour-and-weaponry");
             const abyssalWaveSize = game.township.abyssalWaveSize;
             const minimumArmourAndWeaponaryMet = (armourAndWeaponary - abyssalWaveSize) >= minimumArmourAndWeaponary;
 

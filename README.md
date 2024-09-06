@@ -11,5 +11,9 @@ For healing, you can select what resource to use, either herbs or potions. By de
 
 You can also enable an option to engage abyssal waves even if fortifications are not fully upgraded, although this will reduce XP efficiency and is recommended to be left off.
 
+Minimum Armour and Weaponry: This setting allows you to reserve a certain amount of armor and weaponry for trading, preventing the mod from using all of it for waves.
+
 ## Help
 Repairing can be expensive at times, so it may be inadvisable to turn this on until your town is profitable.
+
+If you notice that all of your armor and weaponry is being used for waves when you intend to trade it, adjust the Minimum Armour & Weaponry setting to reserve a specified amount for trading.
