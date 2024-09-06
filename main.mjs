@@ -30,8 +30,7 @@ export function setup(ctx) {
             label: 'Repair in Winter?',
             hint: 'Determines if township should continue repairing during winter season.',
             default: true
-        },
-        ]
+        }]
     );
 
     const intoTheAbyssSettings = ctx.settings.section('Into the Abyss');
@@ -101,6 +100,7 @@ export function setup(ctx) {
         'melvorD:Amulet': ['melvorItA:Voidtaker_Amulet'],
         'melvorD:Gem': ['melvorItA:Abyssal_Skilling_Gem'],
     };
+
     gearSlots.forEach(slotID => {
         if (gearPriorityIDs[slotID]) {
             gearPriority[slotID] = [];
@@ -184,10 +184,13 @@ export function setup(ctx) {
         // Get the GP cost to repair all
         let repairCost = game.township.getTotalRepairCosts().get(game.township.resources.getObjectByID("melvorF:GP"));
 
-        // Repair logic
+        // If the repair will leave you with above the set minimum GP, repair all
         if ((game.gp.amount - repairCost > generalSettings.get("Minimum Money")) &&
             (game.township.townData.season.id != "melvorF:Winter" || generalSettings.get("repair-in-winter"))) {
+                // Leaving here to avoid breaking if another storage type is added
                 game.township.repairAllBuildings();
+                // For some reason game.township.repairAllBuildings() doesn't repair both individually
+                // So two seperate calls stop ItA repair costs preventing normal repair and vice versa
                 game.township.repairAllBuildingsFromStorageType('Normal');
                 if (game.township.canFightAbyssalWaves) {
                     game.township.repairAllBuildingsFromStorageType('Soul');
@@ -197,7 +200,11 @@ export function setup(ctx) {
         // Heal the town
         let resourceName = getResourceToUse(generalSettings);
         let resourceToUse = game.township.resources.getObjectByID(resourceName);
+
+        // Calculate amount of healing required
         let healthToHeal = 100 - game.township.townData.health;
+
+        // Apply healing
         this.increaseHealth(resourceToUse, healthToHeal);
 
         // Abyssal Wave Fighting
@@ -210,7 +217,9 @@ export function setup(ctx) {
             const healthSufficient = game.township.townData.health >= 100;
             const conditionsMet = healthSufficient && game.township.canWinAbyssalWave && minimumArmourAndWeaponaryMet;
 
-            if (conditionsMet && (intoTheAbyssSettings.get("wave-if-suboptimal") || fortificationsUpgraded())) {
+            if (!conditionsMet) return;
+
+            if (intoTheAbyssSettings.get("wave-if-suboptimal") || fortificationsUpgraded()) {
                 game.township.processAbyssalWaveOnClick();
             }
         }
