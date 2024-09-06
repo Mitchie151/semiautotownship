@@ -31,13 +31,7 @@ export function setup(ctx) {
             hint: 'Determines if township should continue repairing during winter season.',
             default: true
         },
-        {
-            type: 'switch',
-            name: 'auto-swap-equipment',
-            label: 'Auto Swap Equipment?',
-            hint: 'Determines if township should automatically swap equipment to reduce repair costs and increase XP gain per abyssal wave fought (Recommended ON).',
-            default: true
-        }]
+        ]
     );
 
     const intoTheAbyssSettings = ctx.settings.section('Into the Abyss');
@@ -59,6 +53,18 @@ export function setup(ctx) {
             min: 0
         }]
     );
+
+    const semiCoreSettings = ctx.settings.section('SEMI Core');
+
+    semiCoreSettings.add([
+        {
+            type: 'switch',
+            name: 'auto-swap-equipment',
+            label: 'Auto Swap Equipment? (Requires SEMI Core mod)',
+            hint: 'Determines if township should automatically swap equipment to reduce repair costs and increase XP gain per abyssal wave fought (Recommended ON).',
+            default: true
+        }
+    ]);
 
     // Equipment Swap code is almost entirely from SEMI Auto Farming by Psycast. Link is here: https://mod.io/g/melvoridle/m/semi-auto-farming
     const id = 'auto-township';
@@ -170,7 +176,7 @@ export function setup(ctx) {
 
     ctx.patch(Township, 'tick').after(function () {
         // Equipment Swap
-        const equipmentSwapActivated = generalSettings.get("auto-swap-equipment") && mod.api.SEMI != null;
+        const equipmentSwapActivated = semiCoreSettings.get("auto-swap-equipment") && mod.api.SEMI != null;
         if (equipmentSwapActivated) {
             equipmentSwap();
         }
