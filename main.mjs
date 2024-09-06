@@ -35,7 +35,7 @@ export function setup(ctx) {
             type: 'switch',
             name: 'auto-swap-equipment',
             label: 'Auto Swap Equipment?',
-            hint: 'Determines if township should automatically swap equipment to reduce repair costs and increase XP gain (Recommended ON).',
+            hint: 'Determines if township should automatically swap equipment to reduce repair costs and increase XP gain per abyssal wave fought (Recommended ON).',
             default: true
         }]
     );
@@ -95,7 +95,7 @@ export function setup(ctx) {
         'melvorD:Amulet': ['melvorItA:Voidtaker_Amulet'],
         'melvorD:Gem': ['melvorItA:Abyssal_Skilling_Gem'],
     };
-    gearSlots.forEach(slotID => { // convert id -> item
+    gearSlots.forEach(slotID => {
         if (gearPriorityIDs[slotID]) {
             gearPriority[slotID] = [];
             gearPriorityIDs[slotID].forEach(itemID => {
@@ -126,23 +126,17 @@ export function setup(ctx) {
             if (gear) {
                 for (let i = 0; i < gear.length; i++) {
                     let toEquipItem = gear[i];
-
-                    // debugLog(`Slot: ${slotID}, Item: ${toEquipItem.id}`);
                     let gearSlot = getGearSlot(slotID);
 
-                    // debugLog(`Slot: ${slotID}, Item: ${toEquipItem.id}, Equipped: ${gearSlot.item.id}`);
                     if (isItemEquipped(toEquipItem)) {
-                        // debugLog(`Already Equipped: ${slotID} -> ${toEquipItem.id}`);
                         break;
                     }
 
                     if (bankQty(toEquipItem) <= 0 || !canEquipGearItem(toEquipItem)) {
-                        // debugLog(`Skipping: ${slotID} -> ${toEquipItem.id}`);
                         continue;
                     }
 
                     if (gearSlot.item != toEquipItem) {
-                        // debugLog(`Swapping: ${slotID} -> ${toEquipItem.id}`);
                         equipGearItem(slotID, toEquipItem);
                         break;
                     }
