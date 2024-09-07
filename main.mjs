@@ -39,7 +39,7 @@ export function setup(ctx) {
             type: 'switch',
             name: 'wave-if-suboptimal',
             label: 'Fight Current Wave if Suboptimal?',
-            hint: 'Determines if township should fight waves if fortification upgrades are available (Recommended OFF).',
+            hint: 'Determines if township should fight waves if fortification upgrades are available or health is below 100.',
             default: false
         },
         {
@@ -213,11 +213,10 @@ export function setup(ctx) {
             const minimumArmourAndWeaponary = intoTheAbyssSettings.get("minimum-armour-and-weaponry");
             const abyssalWaveSize = game.township.abyssalWaveSize;
             const minimumArmourAndWeaponaryMet = (armourAndWeaponary - abyssalWaveSize) >= minimumArmourAndWeaponary;
-            const healthSufficient = game.township.townData.health >= 100;
             const notCurrentlyFighting = !game.township.isFightingAbyssalWave;
             const canWinAbyssalWave = game.township.canWinAbyssalWave;
 
-            const conditionsMet = healthSufficient && game.township.canWinAbyssalWave && minimumArmourAndWeaponaryMet && notCurrentlyFighting && canWinAbyssalWave;
+            const conditionsMet = minimumArmourAndWeaponaryMet && notCurrentlyFighting && canWinAbyssalWave;
 
             if (conditionsMet && (intoTheAbyssSettings.get("wave-if-suboptimal") || fortificationsUpgraded())) {
                 game.township.processAbyssalWave();
@@ -258,6 +257,11 @@ export function setup(ctx) {
     function fortificationsUpgraded() {
         const fortification = game.township.townData.fortification;
         const level = game.township.abyssalLevel;
+        const healthSufficient = game.township.townData.health >= 100;
+
+        if (!healthSufficient) {
+            return false;
+        }
 
         for (const { level: maxLevel, requirement } of FORTIFICATION_REQUIREMENTS) {
             if (level < maxLevel && fortification >= requirement) {
