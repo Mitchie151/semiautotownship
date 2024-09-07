@@ -1,6 +1,5 @@
 // setup.mjs    
 export function setup(ctx) {
-
     const generalSettings = ctx.settings.section('General');
 
     generalSettings.add(
@@ -65,7 +64,7 @@ export function setup(ctx) {
         }
     ]);
 
-    // Equipment Swap code is almost entirely from SEMI Auto Farming by Psycast. Link is here: https://mod.io/g/melvoridle/m/semi-auto-farming
+    // Equipment Swap code is almost entirely repurposed from SEMI Auto Farming by Psycast. Link is here: https://mod.io/g/melvoridle/m/semi-auto-farming
     const id = 'auto-township';
     const debugLog = (...msg) => {
         mod.api.SEMI.log(`${id}`, ...msg);
@@ -134,13 +133,11 @@ export function setup(ctx) {
                     let toEquipItem = gear[i];
                     let gearSlot = getGearSlot(slotID);
 
-                    if (isItemEquipped(toEquipItem)) {
+                    if (isItemEquipped(toEquipItem))
                         break;
-                    }
 
-                    if (bankQty(toEquipItem) <= 0 || !canEquipGearItem(toEquipItem)) {
+                    if (bankQty(toEquipItem) <= 0 || !canEquipGearItem(toEquipItem))
                         continue;
-                    }
 
                     if (gearSlot.item != toEquipItem) {
                         equipGearItem(slotID, toEquipItem);
@@ -156,6 +153,7 @@ export function setup(ctx) {
 
     const equipmentRestore = () => {
         debugLog(`Restoring Equipment Swap:`, (gearSwapped != null));
+    
         if (gearSwapped != null) {
             const oldEquipment = mod.api.SEMI.equipmentSnapshot();
 
@@ -164,7 +162,7 @@ export function setup(ctx) {
 
             writeEquipmentChangeDebug(mod.api.SEMI.equipmentDifferences(oldEquipment));
         }
-    };
+    };        
 
     const writeEquipmentChangeDebug = (snapshot) => {
         gearSlots.forEach(slotKey => {
@@ -174,9 +172,11 @@ export function setup(ctx) {
         });
     };
 
+    // Requires setting to be on as well as SEMI Core mod to be installed
+    const equipmentSwapActivated = semiCoreSettings.get("auto-swap-equipment") && mod.api.SEMI != null;
+
     ctx.patch(Township, 'tick').after(function () {
-        // Equipment Swap
-        const equipmentSwapActivated = semiCoreSettings.get("auto-swap-equipment") && mod.api.SEMI != null;
+        // Swap Gear
         if (equipmentSwapActivated) {
             equipmentSwap();
         }
@@ -213,14 +213,14 @@ export function setup(ctx) {
             const minimumArmourAndWeaponary = intoTheAbyssSettings.get("minimum-armour-and-weaponry");
             const abyssalWaveSize = game.township.abyssalWaveSize;
             const minimumArmourAndWeaponaryMet = (armourAndWeaponary - abyssalWaveSize) >= minimumArmourAndWeaponary;
-
             const healthSufficient = game.township.townData.health >= 100;
-            const conditionsMet = healthSufficient && game.township.canWinAbyssalWave && minimumArmourAndWeaponaryMet;
+            const notCurrentlyFighting = !game.township.isFightingAbyssalWave;
+            const canWinAbyssalWave = game.township.canWinAbyssalWave;
 
-            if (!conditionsMet) return;
+            const conditionsMet = healthSufficient && game.township.canWinAbyssalWave && minimumArmourAndWeaponaryMet && notCurrentlyFighting && canWinAbyssalWave;
 
-            if (intoTheAbyssSettings.get("wave-if-suboptimal") || fortificationsUpgraded()) {
-                game.township.processAbyssalWaveOnClick();
+            if (conditionsMet && (intoTheAbyssSettings.get("wave-if-suboptimal") || fortificationsUpgraded())) {
+                game.township.processAbyssalWave();
             }
         }
 
@@ -229,47 +229,46 @@ export function setup(ctx) {
             equipmentRestore();
         }
     });
-};
 
+    function getResourceToUse(generalSettings) {
+        let resourceName = generalSettings.get("Resources");
+        let herbGeneration = game.township.resources.getObjectByID("melvorF:Herbs").generation;
+        let potionGeneration = game.township.resources.getObjectByID("melvorF:Potions").generation;
 
-function getResourceToUse(generalSettings) {
-    let resourceName = generalSettings.get("Resources");
-    let herbGeneration = game.township.resources.getObjectByID("melvorF:Herbs").generation;
-    let potionGeneration = game.township.resources.getObjectByID("melvorF:Potions").generation;
-
-    if (resourceName == "Auto") {
-        if (herbGeneration >= potionGeneration) {
-            return "melvorF:Herbs";
+        if (resourceName == "Auto") {
+            if (herbGeneration >= potionGeneration) {
+                return "melvorF:Herbs";
+            } else {
+                return "melvorF:Potions";
+            }
         } else {
-            return "melvorF:Potions";
+            return resourceName;
         }
-    } else {
-        return resourceName;
     }
-}
 
-// Hardcoded, probably doesn't matter though doubt these will change.
-const FORTIFICATION_REQUIREMENTS = [
-    { level: 10, requirement: 7.5 },
-    { level: 20, requirement: 7.5 },
-    { level: 30, requirement: 27.5 },
-    { level: 40, requirement: 70 },
-    { level: 50, requirement: 130 },
-];
+    // Hardcoded, probably doesn't matter though doubt these will change.
+    const FORTIFICATION_REQUIREMENTS = [
+        { level: 10, requirement: 7.5 },
+        { level: 20, requirement: 7.5 },
+        { level: 30, requirement: 27.5 },
+        { level: 40, requirement: 70 },
+        { level: 50, requirement: 130 },
+    ];
 
-function fortificationsUpgraded() {
-    const fortification = game.township.townData.fortification;
-    const level = game.township.abyssalLevel;
+    function fortificationsUpgraded() {
+        const fortification = game.township.townData.fortification;
+        const level = game.township.abyssalLevel;
 
-    for (const { level: maxLevel, requirement } of FORTIFICATION_REQUIREMENTS) {
-        if (level < maxLevel && fortification >= requirement) {
+        for (const { level: maxLevel, requirement } of FORTIFICATION_REQUIREMENTS) {
+            if (level < maxLevel && fortification >= requirement) {
+                return true;
+            }
+        }
+
+        if (level >= 50 && fortification >= FORTIFICATION_REQUIREMENTS[4].requirement) {
             return true;
         }
-    }
 
-    if (level >= 50 && fortification >= FORTIFICATION_REQUIREMENTS[4].requirement) {
-        return true;
+        return false;
     }
-
-    return false;
-}
+};
