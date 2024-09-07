@@ -39,7 +39,7 @@ export function setup(ctx) {
             type: 'switch',
             name: 'wave-if-suboptimal',
             label: 'Fight Current Wave if Suboptimal?',
-            hint: 'Determines if township should fight waves if fortification upgrades are available or health is below 100.',
+            hint: 'Determines if township should fight waves if fortification upgrades (less XP) are available or health is below 100 (health below 100 means spending more armour & weaponry).',
             default: false
         },
         {
