@@ -39,7 +39,7 @@ export function setup(ctx) {
             type: 'switch',
             name: 'wave-if-suboptimal',
             label: 'Fight Current Wave if Suboptimal?',
-            hint: 'Determines if township should fight waves if fortification upgrades (less XP) are available or health is below 100 (health below 100 means spending more armour & weaponry).',
+            hint: 'Determines whether the township should fight Abyssal Waves when fortifications can be upgraded (yields less XP) or when town health is below 100% (increases the cost of armor and weaponry).',
             default: false
         },
         {
