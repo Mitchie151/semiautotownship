@@ -13,6 +13,8 @@ You can also enable an option to engage abyssal waves even if fortifications are
 
 Minimum Armour and Weaponry: This setting allows you to reserve a certain amount of armor and weaponry for trading, preventing the mod from using all of it for waves.
 
+If you enable Auto Swap Equipment and have the SEMI Core mod installed, your equipment, including items like skillcapes, will automatically be swapped before repairing your town or fighting abyssal waves, ensuring optimal performance and efficiency.
+
 ## Help
 Repairing can be expensive at times, so it may be inadvisable to turn this on until your town is profitable.
 
