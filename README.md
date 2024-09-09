@@ -9,7 +9,7 @@ In the mod settings, you can set a cap that will prevent it from spending your w
 
 For healing, you can select what resource to use, either herbs or potions. By default, this mod will select the one for which you have the highest income.
 
-You can also enable an option to engage abyssal waves even if fortifications are not fully upgraded, although this will reduce XP efficiency and is recommended to be left off.
+You can also enable an option to engage abyssal waves even if fortifications are not fully upgraded, although this will reduce AXP efficiency and is recommended to be left off.
 
 Minimum Armour and Weaponry: This setting allows you to reserve a certain amount of armor and weaponry for trading, preventing the mod from using all of it for waves.
 

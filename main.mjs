@@ -39,7 +39,7 @@ export function setup(ctx) {
             type: 'switch',
             name: 'wave-if-suboptimal',
             label: 'Fight Current Wave if Suboptimal?',
-            hint: 'Determines whether the township should fight Abyssal Waves when fortifications can be upgraded (yields less XP) or when town health is below 100% (increases the cost of armor and weaponry).',
+            hint: 'Determines whether the township should fight Abyssal Waves when fortifications can be upgraded (yields less AXP) or when town health is below 100% (increases the cost of armor and weaponry).',
             default: false
         },
         {
@@ -59,7 +59,7 @@ export function setup(ctx) {
             type: 'switch',
             name: 'auto-swap-equipment',
             label: 'Auto Swap Equipment? (Requires SEMI Core mod)',
-            hint: 'Determines if township should automatically swap equipment to reduce repair costs and increase XP gain per abyssal wave fought (Recommended ON).',
+            hint: 'Determines if township should automatically swap equipment to reduce repair costs and increase AXP gain per abyssal wave fought (Recommended ON).',
             default: true
         }
     ]);
