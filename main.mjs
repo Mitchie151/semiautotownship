@@ -37,6 +37,13 @@ export function setup(ctx) {
     intoTheAbyssSettings.add(
         [{
             type: 'switch',
+            name: 'fight-abyssal-wave',
+            label: 'Fight Abyssal Waves Automatically?',
+            hint: 'Determines if township should fight Abyssal Waves automatically. Adjust the mimimum armour and weaponry setting to avoid having none left for trading.',
+            default: false
+        },
+        {
+            type: 'switch',
             name: 'wave-if-suboptimal',
             label: 'Fight Current Wave if Suboptimal?',
             hint: 'Determines whether the township should fight Abyssal Waves when fortifications can be upgraded (yields less AXP) or when town health is below 100% (increases the cost of armor and weaponry).',
@@ -208,7 +215,7 @@ export function setup(ctx) {
         this.increaseHealth(resourceToUse, healthToHeal);
 
         // Abyssal Wave Fighting
-        if (game.township.canFightAbyssalWaves) {
+        if (intoTheAbyssSettings.get("fight-abyssal-wave") && game.township.canFightAbyssalWaves) {
             const armourAndWeaponary = game.township.resources.getObjectByID("melvorItA:ArmourWeaponry").amount;
             const minimumArmourAndWeaponary = intoTheAbyssSettings.get("minimum-armour-and-weaponry");
             const abyssalWaveSize = game.township.abyssalWaveSize;
